@@ -36,13 +36,34 @@ public class EmployeeEndpoint {
         return Response.noContent().build();
     }
     
+    /**
+     * Get an Employee with a specific id
+     * @param id the id that is being searched
+     * @return 200 (ok) + JSON object with Employee OR 204 (no content)
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
-    public Response getEmployeeById(@PathParam("id") long id) {
+    public Response getEmployeeById(@PathParam("id") Long id) {
         Employee result = this.employeeService.findById(id);
         if (result != null) {
-            Response.ok(result).build();
+            return Response.ok(result).build();
+        }
+        return Response.noContent().build();
+    }
+    
+    /**
+     * Get an Employee with a specific name
+     * @param name the name that is being searched
+     * @return 200 (ok) + JSON object with Employee OR 204 (no content)
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{name}")
+    public Response getEmployeeById(@PathParam("name") String name) {
+        Employee result = this.employeeService.findByName(name);
+        if (result != null) {
+            return Response.ok(result).build();
         }
         return Response.noContent().build();
     }
