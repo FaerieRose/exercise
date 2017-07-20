@@ -4,6 +4,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -88,11 +89,20 @@ public class EmployeeEndpoint {
     }
     
 
+    @PUT
+    @Path("update")
+    public Response updateEmployee(Employee employee) {
+        if (this.employeeService.updateEmployee(employee)) {
+            return Response.ok().build();
+        }
+        return Response.notModified().build();
+    }
+    
+
     @DELETE
     @Path("del/{id}")
     public Response removeEmployee(@PathParam("id") Long id) {
         this.employeeService.removeEmployee(id);
         return Response.ok().build();
     }
-    
 }

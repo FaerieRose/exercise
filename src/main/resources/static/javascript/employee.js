@@ -29,7 +29,7 @@ function getAllEmployees() {
             	  col1.textContent = employeeList[i].id;
             	  col2.textContent = employeeList[i].name;
             	  row.setAttribute("class","rowEmployee")
-            	  row.setAttribute("onclick","removeEmployeeById('" + employeeList[i].id + "')")
+            	  row.setAttribute("onclick","seeEmployee('" + employeeList[i].id + "')")
             	  row.appendChild(col1);
             	  row.appendChild(col2);
             	  employeeTable.appendChild(row);
@@ -50,8 +50,14 @@ function saveEmployeeByName() {
 	var newName = document.getElementById("strNewEmployee").value;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 &&  this.status == 200) {
-            getAllEmployees();
+        if (this.readyState == 4 && this.status == 200) {
+        	if (this.responseText > 0) {
+                getAllEmployees();
+                document.getElementById("pEmployeeNewFeedback").textContent = "";
+                document.getElementById("strNewEmployee").value = "";
+        	} else {
+                document.getElementById("pEmployeeNewFeedback").textContent = "Warning: Unable to create new Employee. Name too short or already exists.";
+        	}
         } else {
             console.log("Status XMLHttpRequest : " + this.status);
         }
@@ -61,12 +67,29 @@ function saveEmployeeByName() {
     xhttp.send();
 }
 
+function seeEmployee(id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 &&  this.status == 200) {
+            console.log(this.responseText);
+            employee = JSON.parse(this.responseText);
+            setSeeEmployee(employee.name, employee.id, false)
+        } else {
+            console.log("Status XMLHttpRequest : " + this.status);
+        }
+    };
+    xhttp.open("GET", "http://localhost:8081/api/employee/id/" + id);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+	
+}
 
-function removeEmployeeById(id) {
+function removeEmployee(id) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 &&  this.status == 200) {
             getAllEmployees();
+            setSeeEmployee("", -1, true)
         } else {
             console.log("Status XMLHttpRequest : " + this.status);
         }
@@ -74,4 +97,43 @@ function removeEmployeeById(id) {
     xhttp.open("DELETE", "http://localhost:8081/api/employee/del/" + id, true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
+}
+
+function updateEmployee(id) {
+	var name = document.getElementById("strEmployeeName").value;
+	var data = '{"id":' + id + ',"name":"' + name + '"}';
+	console.log(data);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+        	if (this.status == 200) {
+                getAllEmployees();
+                document.getElementById("pEmployeeInformationFeedback").textContent = "";
+        	} else if (this.status == 304) {
+        		document.getElementById("pEmployeeInformationFeedback").textContent = "Warning: Unable to update Employee"
+        	} else {
+        		document.getElementById("pEmployeeInformationFeedback").textContent = "Error: Unable to update Employee"
+        	}
+        } else {
+            console.log("Status XMLHttpRequest : " + this.status);
+        }
+    };
+    xhttp.open("PUT", "http://localhost:8081/api/employee/update", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(data);
+}
+
+
+function setSeeEmployee(name, id, isDisabled) {
+    document.getElementById("strEmployeeName").value = name;
+    document.getElementById("btnEmployeeUpdate").disabled = isDisabled;
+    document.getElementById("btnEmployeeRemove").disabled = isDisabled;
+    document.getElementById("pEmployeeInformationFeedback").textContent = "";
+    if (id == -1) {
+        document.getElementById("btnEmployeeUpdate").removeAttribute("onclick");
+        document.getElementById("btnEmployeeRemove").removeAttribute("onclick");
+    } else {
+        document.getElementById("btnEmployeeUpdate").setAttribute("onclick","updateEmployee(" + id + ")");
+        document.getElementById("btnEmployeeRemove").setAttribute("onclick","removeEmployee(" + id + ")");
+    }
 }

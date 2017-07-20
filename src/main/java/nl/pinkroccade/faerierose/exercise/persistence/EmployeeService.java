@@ -100,9 +100,10 @@ public class EmployeeService {
      * @return true if all checks passed, otherwise false
      */
     private boolean checkName(String name) {
-        System.out.println("==== Employee Service 'checkName' started");
+        System.out.print("==== Employee Service 'checkName' started");
         if (name == null) return false;
         if (name.length() < 3) return false;
+        System.out.print(" name = " + name + "\n");
         
         Iterable<Employee> employees = this.employeeRepository.findAll();
         for (Employee employee : employees) {
@@ -111,6 +112,15 @@ public class EmployeeService {
             }
         }
         return true;
+    }
+    
+    public boolean updateEmployee(Employee employee) {
+        System.out.println("==== Employee Service 'updateEmployee' started");
+        if (employee != null && employee.getId() > 0 && checkName(employee.getName())) {
+            this.save(employee);
+            return true;
+        }
+        return false;
     }
     
     public void removeEmployee(long id) {

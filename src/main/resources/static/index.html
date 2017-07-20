@@ -8,16 +8,36 @@
     <link rel="stylesheet" type="text/css" href="css/employee.css" />
   </head>
   <body>
-    <header id='hdr1'>
-      <h1>Employees</h1>
-    </header>
-    <article id='artCreateNew'>
-      <h2>Create wew Employee</h2>
-      <input type="text" id="strNewEmployee" placeholder="Name of the new Employee">
-      <input type="button" value="Insert" onclick="saveEmployeeByName()">
-      <h2>List of Employees in the database</h2>
-      <table id="tblEmployees">
-      </table>
-    </article>
+  	<div id="divMain">
+	  	<div>
+		    <header id='hdr1'>
+		      <h1>Employees</h1>
+		    </header>
+	    </div>
+	    <div class="divArt">
+		    <article id='artCreateNew'>
+		      <h2>Create New Employee</h2>
+		      <input type="text" id="strNewEmployee" placeholder="Name of the new Employee">
+		      <input type="button" value="Insert" onclick="saveEmployeeByName()">
+		      <p class="feedback" id="pEmployeeNewFeedback"></p>
+		    </article>
+	  	</div>
+	    <div class="divArt">
+		    <article id='artInfo'>
+		      <h2>Employee Information</h2>
+		      <input type="text" id="strEmployeeName" placeholder="Name of the new Employee">
+		      <input type="button" id="btnEmployeeUpdate" value="Update" disabled>
+		      <input type="button" id="btnEmployeeRemove" value="Remove" disabled>
+		      <p class="feedback" id="pEmployeeInformationFeedback"></p>
+		    </article>
+	  	</div>
+	    <div class="divArt">
+		    <article id='artList'>
+		      <h2>List of Employees in the database</h2>
+		      <table id="tblEmployees">
+		      </table>
+		    </article>
+	  	</div>
+  	</div>
   </body>
 </html>

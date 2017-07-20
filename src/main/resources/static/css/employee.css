@@ -1,17 +1,86 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	font-family: Verdana, Geneva, sans-serif;
+}
 
+body {
+	background-color: #DFDFFF;
+}
+
+/* --------------------------------------------------------- */
+/* Setting div elements                                      */
+/* --------------------------------------------------------- */
+#divmain {
+	margin: 0px 20% 10px 20%;
+}
+
+div div:first-child {
+	background-color: #AFAFFF;
+	padding: 20px 10px 20px 10px;
+}
+
+.divArt {
+	padding: 5px 10px 20px 10px;
+}
+
+
+/* --------------------------------------------------------- */
+/* Setting p and h? elements                                 */
+/* --------------------------------------------------------- */
+.feedback {
+	color: red;
+	font-weight: bold;
+}
+
+h2 {
+	background-color: #CFCFFF;
+	margin: 0px 0px 5px 0px;
+	padding: 5px;
+}
+
+/* --------------------------------------------------------- */
+/* Setting input elements                                    */
+/* --------------------------------------------------------- */
+input {
+	height: 30px;
+}
+
+input[type="button"] {
+	width: 100px;
+	font-family: "Lucida Console", Monaco, monospace;
+}
+
+input[type="text"] {
+	width: 200px;
+}
+
+/* --------------------------------------------------------- */
+/* Setting table elements                                    */
+/* --------------------------------------------------------- */
+td {
+	height: 1.3em;
+	font-family: "Lucida Console", Monaco, monospace;	
+}
 
 th {
-	font-family: "Times New Roman", Georgia, Serif;
+	font-weight: bold;
+	height: 1.5em;
+}
+
+tr:nth-child(odd) {
+	background-color: #CFCFFF;
 }
 
 tr:first-child {
 	border-color: black;
     border-style: solid;
-    border-width: 0px 0px 2px 0px;
+    border-width: 0px 0px 1px 0px;
+	background-color: #AFAFFF;
 }
 
 #tblEmployees {
-	border-color: red;
+	border-color: #4F4FFF;
     border-style: solid;
     border-width: 2px 2px 2px 2px;
     border-collapse: collapse;
