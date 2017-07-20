@@ -22,17 +22,30 @@ public class EmployeeEndpoint {
     @Autowired
     private EmployeeService employeeService;
     
+    /**
+     * GET a list of all the Employees in the database
+     * @return 200 (ok) + JSON object with all Employees OR 204 (no content)
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCompleteListEmployees() {
-        Iterable<Employee> employees = this.employeeService.findAll();
-        if (employees != null) {
-            for(Employee employee : employees)  {
-                System.out.println(employee.getName());
-            }
-            return Response.ok(employees).build();
+        Iterable<Employee> result = this.employeeService.findAll();
+        if (result != null) {
+            return Response.ok(result).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.noContent().build();
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("id/{id}")
+    public Response getEmployeeById(@PathParam("id") long id) {
+        Employee result = this.employeeService.findById(id);
+        if (result != null) {
+            Response.ok(result).build();
+        }
+        return Response.noContent().build();
+    }
+    
     
 }
