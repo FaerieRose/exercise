@@ -1,0 +1,56 @@
+# ===========================================
+# Directorries to be ignored
+# ===========================================
+build/
+target/
+documentatie/
+bin/
+tmp/
+.mvn/
+.metadata/
+.settings/
+
+# ===========================================
+# File extensions to be ignored
+# ===========================================
+*.class
+*.project
+*.settings
+*.classpath
+*.idea
+*.iml
+*.jar
+*.war
+*.log
+*.bak
+
+# ===========================================
+# STS 
+# ===========================================
+.apt_generated
+.factorypath
+.springBeans
+
+# ===========================================
+# Exclude application.properties
+# ===========================================
+src/main/resources/application.properties
+
+# ===========================================
+# Exclude other files
+# ===========================================
+SessionEncryption.*
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+dependency-reduced-pom.xml
+release.properties
+local.properties
+buildNumber.properties
+.mvn/timing.properties
+
+# Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
+!/.mvn/wrapper/maven-wrapper.jar
+
+
