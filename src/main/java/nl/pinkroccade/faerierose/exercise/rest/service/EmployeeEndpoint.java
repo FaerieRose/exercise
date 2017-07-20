@@ -27,6 +27,9 @@ public class EmployeeEndpoint {
     public Response getCompleteListEmployees() {
         Iterable<Employee> employees = this.employeeService.findAll();
         if (employees != null) {
+            for(Employee employee : employees)  {
+                System.out.println(employee.getName());
+            }
             return Response.ok(employees).build();
         }
         return Response.status(Status.NOT_FOUND).build();
