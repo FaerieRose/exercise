@@ -1,0 +1,37 @@
+
+
+th {
+	font-family: "Times New Roman", Georgia, Serif;
+}
+
+tr:first-child {
+	border-color: black;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+}
+
+#tblEmployees {
+	border-color: red;
+    border-style: solid;
+    border-width: 2px 2px 2px 2px;
+    border-collapse: collapse;
+}
+
+.rowEmployee {
+	border-color: grey;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+}
+
+td:first-child {
+	text-align: center;
+}
+
+#hdrID {
+	width: 50px;
+}
+
+#hdrName {
+	width: 300px;
+	text-align: left;
+}

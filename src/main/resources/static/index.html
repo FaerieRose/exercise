@@ -4,12 +4,20 @@
     <meta name="web_author" content="FaerieRose">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="javascript/employee.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/employee.css" />
   </head>
   <body>
     <header id='hdr1'>
       <h1>Employees</h1>
     </header>
-    <article id='art1'>
+    <article id='artCreateNew'>
+      <h2>Create wew Employee</h2>
+      <input type="text" id="strNewEmployee" placeholder="Name of the new Employee">
+      <input type="button" value="Insert" onclick="saveEmployeeByName()">
+      <h2>List of Employees in the database</h2>
+      <table id="tblEmployees">
+      </table>
     </article>
   </body>
 </html>

@@ -1,5 +1,7 @@
 package nl.pinkroccade.faerierose.exercise.rest.service;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -68,5 +70,29 @@ public class EmployeeEndpoint {
         return Response.noContent().build();
     }
     
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("new/{name}")
+    public Response postNewEmployeeName(@PathParam("name") String name) {
+        long result = this.employeeService.createNewEmployeeByName(name);
+        return Response.ok(result).build();
+    }
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("new")
+    public Response postNewEmployee(Employee newEmployee) {
+        long result = this.employeeService.createNewEmployee(newEmployee);
+        return Response.ok(result).build();
+    }
+    
+
+    @DELETE
+    @Path("del/{id}")
+    public Response removeEmployee(@PathParam("id") Long id) {
+        this.employeeService.removeEmployee(id);
+        return Response.ok().build();
+    }
     
 }

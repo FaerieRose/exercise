@@ -59,8 +59,61 @@ public class EmployeeService {
      * Saving an Employee in the database
      * @param employee the Employee to be saved
      */
-    public void save(Employee employee) {
-        this.employeeRepository.save(employee);
+    private Employee save(Employee employee) {
+        return this.employeeRepository.save(employee);
+    }
+    
+    /**
+     * Create a new Employee in the database using an Employee
+     * @param newEmployee the new Employee to be added to the database
+     * @return the id of the new Employee or -1 if no new Employee was created
+     */
+    public long createNewEmployee(Employee newEmployee) {
+        System.out.println("==== Employee Service 'createNewEmployee' started for Employee " + newEmployee.toString());
+        // Check is newEmployee is null. If it is, return -1
+        if (newEmployee != null) {
+            System.out.println("==== Employee Service 'createNewEmployee' started for id " + newEmployee.getId());
+            // Remove an id if it is already present
+            if (newEmployee.getId() > 0) newEmployee.setId(0);
+            if (this.checkName(newEmployee.getName())) {
+                return this.save(newEmployee).getId(); 
+            }
+        }
+        return -1;
     }
 
+    /**
+     * Create a new Employee in the database using a name as input
+     * @param name the name of the new Employee
+     * @return the id of the new Employee or -1 if no new Employee was created
+     */
+    public long createNewEmployeeByName(String name) {
+        System.out.println("==== Employee Service 'createNewEmployeeByName' started for name " + name);
+        Employee newEmployee = new Employee();
+        newEmployee.setName(name);
+        return this.createNewEmployee(newEmployee);
+    }
+
+    /**
+     * Checks if the name is not null, unique and longer than 2 characters
+     * @param name the name to be checked
+     * @return true if all checks passed, otherwise false
+     */
+    private boolean checkName(String name) {
+        System.out.println("==== Employee Service 'checkName' started");
+        if (name == null) return false;
+        if (name.length() < 3) return false;
+        
+        Iterable<Employee> employees = this.employeeRepository.findAll();
+        for (Employee employee : employees) {
+            if (employee.getName().equals(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public void removeEmployee(long id) {
+        this.employeeRepository.delete(id);
+    }
 }
