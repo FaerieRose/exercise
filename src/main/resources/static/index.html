@@ -25,9 +25,16 @@
 	    <div class="divArt">
 		    <article id='artInfo'>
 		      <h2>Employee Information</h2>
+		      <label>Name</label>
 		      <input type="text" id="strEmployeeName" placeholder="Name of the new Employee">
 		      <input type="button" id="btnEmployeeUpdate" value="Update" disabled>
-		      <input type="button" id="btnEmployeeRemove" value="Remove" disabled>
+		      <input type="button" id="btnEmployeeRemove" value="Remove Employee" disabled><br>
+		      <label>Partner</label>
+		      <input type="text" id="strEmployeePartner" placeholder="Name of the new Partner" disabled>
+		      <input type="button" id="btnPartnerRemove" value="Remove Partner" disabled><br>
+		      <label></label>
+		      <select id="selectPartner" disabled></select>
+		      <input type="button" id="btnPartnerAdd" value="Add Partner" disabled><br>
 		      <p class="feedback" id="pEmployeeInformationFeedback"></p>
 		    </article>
 	  	</div>

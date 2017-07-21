@@ -42,16 +42,24 @@ h2 {
 /* --------------------------------------------------------- */
 /* Setting input elements                                    */
 /* --------------------------------------------------------- */
-input {
+label {
 	height: 30px;
+	width: 80px;
+	display:inline-block;
+}
+
+input, select {
+	display:inline-block;
+	height: 30px;
+	margin: 0px 0px 5px 0px;
 }
 
 input[type="button"] {
-	width: 100px;
+	width: 150px;
 	font-family: "Lucida Console", Monaco, monospace;
 }
 
-input[type="text"] {
+input[type="text"], select {
 	width: 200px;
 }
 
@@ -100,7 +108,8 @@ td:first-child {
 	width: 50px;
 }
 
-#hdrName {
+#hdrName, #hdrPartner {
 	width: 300px;
 	text-align: left;
 }
+
