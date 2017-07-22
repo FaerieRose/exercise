@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,8 @@ import org.springframework.stereotype.Component;
 
 import nl.pinkroccade.faerierose.exercise.domain.Employee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployee;
+import nl.pinkroccade.faerierose.exercise.domain.IEmployeeName;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployeeView;
-import nl.pinkroccade.faerierose.exercise.domain.model.EmployeeModelBasic;
 import nl.pinkroccade.faerierose.exercise.persistence.EmployeeService;
 
 @Path("employee")
@@ -75,9 +74,9 @@ public class EmployeeEndpoint {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("partners/{id}")
+    @Path("{id}/possible_partners")
     public Response getPossiblePartners(@PathParam("id") Long id) {
-        List<IEmployeeView> result = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
+        List<IEmployeeName> result = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
         return Response.ok(result).build();
     }
     
@@ -89,7 +88,8 @@ public class EmployeeEndpoint {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Path("new/{name}")
-    public Response postNewEmployeeName(@PathParam("name") String name) {
+    public Response createNewEmployeeName(@PathParam("name") String name) {
+        System.out.println("==== Employee Endpoint 'createNewEmployeeName' started");
         long result = this.employeeService.createNewEmployee(name);
         if (result > 0 ) {
             return Response.ok(result).build();

@@ -7,8 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import nl.pinkroccade.faerierose.exercise.domain.model.EmployeeModelBasic;
-
 @Entity
 public class Employee implements IEmployee{
     @Id
@@ -42,11 +40,17 @@ public class Employee implements IEmployee{
      * Returns the id of the Partner to prevent a loop in the code
      * @return id of partner if partner is not null, otherwise -1;
      */
-    public IEmployeeView getPartner() {
+    public long getPartnerId() {
+        if (this.partner == null) {
+            return 0;
+        }
+        return this.partner.getId();
+    }
+    public Employee retrievePartner() {
         if (this.partner == null) {
             return null;
         }
-        return (IEmployeeView) this.partner;
+        return this.partner;
     }
     public void setPartner(Employee partner) {
         this.partner = partner;

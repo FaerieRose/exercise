@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nl.pinkroccade.faerierose.exercise.domain.Employee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployee;
+import nl.pinkroccade.faerierose.exercise.domain.IEmployeeName;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployeeView;
-import nl.pinkroccade.faerierose.exercise.domain.model.EmployeeModelBasic;
 
 
 @Service
@@ -93,7 +93,7 @@ public class EmployeeService {
      * @return true if all checks passed, otherwise false
      */
     private boolean checkName(String name) {
-        System.out.print("==== Employee Service 'checkName' started");
+        System.out.println("==== Employee Service 'checkName' started");
         if (name == null) return false;
         if (name.length() < 3) return false;
         
@@ -111,8 +111,8 @@ public class EmployeeService {
      * @param employee the Employee to be saved
      */
     private IEmployee saveEmployeeInDatabase(Employee employee) {
-        System.out.print("==== Employee Service 'saveEmployeeInDatabase' started");
-        return this.saveEmployeeInDatabase(employee);
+        System.out.println("==== Employee Service 'saveEmployeeInDatabase' started");
+        return this.employeeRepository.save(employee);
     }
     
     /**
@@ -159,8 +159,8 @@ public class EmployeeService {
         System.out.println("==== Employee Service 'addPartnerToEmployee' started");
         if (employee == null || this.findEmployeeInDatabase(employee.getId()) == null) return -1;
         if (partner  == null || this.findEmployeeInDatabase(partner.getId())  == null) return -2;
-        if (employee.getPartner() != null && !employee.getPartner().equals(partner)) return -3;
-        if (partner.getPartner()  != null && !partner.getPartner().equals(employee)) return -4;
+        if (employee.retrievePartner() != null && !employee.retrievePartner().equals(partner)) return -3;
+        if (partner.retrievePartner()  != null && !partner.retrievePartner().equals(employee)) return -4;
         if (employee instanceof Employee && partner instanceof Employee) {
             employee.setPartner((Employee) partner);
             partner.setPartner((Employee) employee);
@@ -190,7 +190,7 @@ public class EmployeeService {
         System.out.println("==== Employee Service 'removePartnerFromEmployee' started");
         if (employee == null || this.findEmployeeInDatabase(employee.getId()) == null) return false;
         IEmployee employeeDB = this.findEmployeeInDatabase(employee.getId());
-        IEmployee partner = (IEmployee) employeeDB.getPartner();
+        IEmployee partner = (IEmployee) employeeDB.retrievePartner();
         if (partner != null) {
             if (employee instanceof Employee && partner instanceof Employee) {
 	            partner.setPartner(null);
@@ -207,13 +207,13 @@ public class EmployeeService {
      * @param employee
      * @return
      */
-    public List<IEmployeeView> findPossiblePartners(IEmployeeView employee) {
+    public List<IEmployeeName> findPossiblePartners(IEmployeeView employee) {
         System.out.println("==== Employee Service 'findPossiblePartners' started");
-        List<IEmployeeView> partnerList = new ArrayList<>();
-        if (employee != null && this.findEmployeeInDatabase(employee.getId()) != null && employee.getPartner() == null) {
+        List<IEmployeeName> partnerList = new ArrayList<>();
+        if (employee != null && this.findEmployeeInDatabase(employee.getId()) != null && employee.getPartnerId() == 0) {
             Iterable<Employee> employees = this.getAllEmployeesInDatabase();
             for (IEmployeeView employeeDB : employees) {
-                if (employeeDB.getPartner() == null && !employeeDB.equals(employee)) {
+                if (employeeDB.getPartnerId() == 0 && !employeeDB.equals(employee)) {
                     partnerList.add(employeeDB);
                 }
             }
