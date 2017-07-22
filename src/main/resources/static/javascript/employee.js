@@ -3,7 +3,6 @@ window.onload = function() {
 }
 
 function getAllEmployees() {
-    console.log("Call to retrieve all Employees");
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4) {
@@ -45,12 +44,10 @@ function getAllEmployees() {
               }
           } else if (this.status == 204) {
               console.log("No data available");
-          } else {
-              console.log("Status XMLHttpRequest : " + this.status);
           }
         }
     };
-    xhttp.open("GET", "http://localhost:8081/api/employee");
+    xhttp.open("GET", "http://localhost:8081/api/employee/findall");
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
 }
@@ -67,11 +64,9 @@ function saveEmployeeByName() {
         	} else {
                 document.getElementById("pEmployeeNewFeedback").textContent = "Warning: Unable to create new Employee. Name too short or already exists.";
         	}
-        } else {
-            console.log("Status XMLHttpRequest : " + this.status);
         }
     };
-    xhttp.open("POST", "http://localhost:8081/api/employee/new/" + newName, true);
+    xhttp.open("POST", "http://localhost:8081/api/employee/new?name=" + newName, true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
 }
@@ -88,11 +83,9 @@ function seeEmployee(id) {
                 setSeeEmployee(employee.name, "", employee.id, false)
                 getPartnerList(employee.id);
             }
-        } else {
-            console.log("Status XMLHttpRequest : " + this.status);
         }
     };
-    xhttp.open("GET", "http://localhost:8081/api/employee/id/" + id);
+    xhttp.open("GET", "http://localhost:8081/api/employee/find/" + id);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
 }
@@ -103,11 +96,9 @@ function removeEmployee(id) {
         if (this.readyState == 4 &&  this.status == 200) {
             getAllEmployees();
             setSeeEmployee("", "", -1, true);
-        } else {
-            console.log("Status XMLHttpRequest : " + this.status);
         }
     };
-    xhttp.open("DELETE", "http://localhost:8081/api/employee/del/" + id, true);
+    xhttp.open("DELETE", "http://localhost:8081/api/employee/" + id + "/del", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
 }
@@ -115,72 +106,41 @@ function removeEmployee(id) {
 function updateEmployee(id) {
 	var name = document.getElementById("strEmployeeName").value;
 	var data = '{"id":' + id + ',"name":"' + name + '"}';
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-        	if (this.status == 200) {
-                getAllEmployees();
-                document.getElementById("pEmployeeInformationFeedback").textContent = "";
-        	} else if (this.status == 304) {
-        		document.getElementById("pEmployeeInformationFeedback").textContent = "Warning: Unable to update Employee"
-        	} else {
-        		document.getElementById("pEmployeeInformationFeedback").textContent = "Error: Unable to update Employee"
-        	}
-        } else {
-            console.log("Status XMLHttpRequest : " + this.status);
-        }
-    };
-    xhttp.open("PUT", "http://localhost:8081/api/employee/update", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send(data);
-}
-
-function removePartner(id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-        	if (this.status == 200) {
-                getAllEmployees();
-                seeEmployee(id);
-                //setSeeEmployee(document.getElementById("strEmployeeName").value, "", id, false)
-                document.getElementById("pEmployeeInformationFeedback").textContent = "";
-        	} else if (this.status == 304) {
-        		document.getElementById("pEmployeeInformationFeedback").textContent = "Warning: Unable to update Employee"
-        	} else {
-        		document.getElementById("pEmployeeInformationFeedback").textContent = "Error: Unable to update Employee"
-        	}
-        } else {
-            console.log("Status XMLHttpRequest : " + this.status);
-        }
-    };
-    xhttp.open("PUT", "http://localhost:8081/api/employee/update/remove_partner/" + id, true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
+	var param = "/update"
+    changeEmployee(id, param, data);
 }
 
 function addPartner(id) {
-    var sel = document.getElementById("selectPartner");
+    var idPartner = document.getElementById("selectPartner").value;
+    var data = '{}';
+    var param = "/partner/add?id_partner=" + idPartner;
+    changeEmployee(id, param, data);
+}
+
+function removePartner(id) {
+    var data = '{}';
+    var param = "/partner/remove";
+    changeEmployee(id, param, data);
+}
+
+function changeEmployee(id, param, data) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4) {
         	if (this.status == 200) {
                 getAllEmployees();
                 seeEmployee(id);
-                //setSeeEmployee(document.getElementById("strEmployeeName").value, "", id, false)
                 document.getElementById("pEmployeeInformationFeedback").textContent = "";
         	} else if (this.status == 304) {
         		document.getElementById("pEmployeeInformationFeedback").textContent = "Warning: Unable to update Employee"
         	} else {
         		document.getElementById("pEmployeeInformationFeedback").textContent = "Error: Unable to update Employee"
         	}
-        } else {
-            console.log("Status XMLHttpRequest : " + this.status);
         }
     };
-    xhttp.open("PUT", "http://localhost:8081/api/employee/update/" + id + "/" + sel.value, true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
-    
+    xhttp.open("PUT", "http://localhost:8081/api/employee/" + id + param, true);
+    xhttp.setRequestHeader("Content-type", "application/json");4
+    xhttp.send(data);
 }
 
 function getPartnerList(id) {
@@ -202,11 +162,9 @@ function getPartnerList(id) {
                 	opt.textContent = partners[i].name;
                 	sel.appendChild(opt);
                 }
-            } else {
-                console.log("Status XMLHttpRequest : " + this.status);
             }
         };
-        xhttp.open("GET", "http://localhost:8081/api/employee/partners/" + id);
+        xhttp.open("GET", "http://localhost:8081/api/employee/" + id + "/possible_partners");
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send();
     }

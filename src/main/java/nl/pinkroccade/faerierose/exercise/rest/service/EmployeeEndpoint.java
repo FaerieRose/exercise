@@ -1,5 +1,7 @@
 package nl.pinkroccade.faerierose.exercise.rest.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -38,6 +40,7 @@ public class EmployeeEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("findall")
     public Response getCompleteListEmployees() {
+        System.out.println(getTime() + " ==== Employee Endpoint 'getCompleteListEmployees' started");
         Iterable<Employee> result = this.employeeService.getAllEmployeesInDatabase();
         if (result != null) {
             return Response.ok(result).build();
@@ -53,7 +56,8 @@ public class EmployeeEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("find/{search_criteria}")
-    public Response getEmployeeById(@PathParam("search_criteria") String param) {
+    public Response findEmployee(@PathParam("search_criteria") String param) {
+        System.out.println(getTime() + " ==== Employee Endpoint 'findEmployee' started");
     	IEmployee result;
     	if (StringUtils.isNumber(param)) {
             result = this.employeeService.findEmployeeInDatabase(Long.parseLong(param));
@@ -75,25 +79,9 @@ public class EmployeeEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/possible_partners")
     public Response getPossiblePartners(@PathParam("id") Long id) {
+        System.out.println(getTime() + " ==== Employee Endpoint 'getPossiblePartners' started");
         List<IEmployeeName> result = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
         return Response.ok(result).build();
-    }
-    
-    /**
-     * Create a new Employee with just a name as input
-     * @param name the name of the new Employee
-     * @return 200 (ok) with the id of the the Employee if one was created, otherwise 304 (not modified)
-     */
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("new/{name}")
-    public Response createNewEmployeeName(@PathParam("name") String name) {
-        System.out.println("==== Employee Endpoint 'createNewEmployeeName' started");
-        long result = this.employeeService.createNewEmployee(name);
-        if (result > 0 ) {
-            return Response.ok(result).build();
-        }
-        return Response.notModified().build();
     }
 
     /**
@@ -105,8 +93,14 @@ public class EmployeeEndpoint {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("new")
-    public Response postNewEmployee(Employee newEmployee) {
-        long result = this.employeeService.createNewEmployee(newEmployee);
+    public Response createNewEmployee(@QueryParam("name") String name, Employee newEmployee) {
+        System.out.println(getTime() + " ==== Employee Endpoint 'createNewEmployee' started : name=" + name + " : employee=" + newEmployee);
+    	long result;
+    	if (name == null) {
+    		result = this.employeeService.createNewEmployee(newEmployee);
+    	} else {
+            result = this.employeeService.createNewEmployee(name);
+    	}
         if (result > 0 ) {
             return Response.ok(result).build();
         }
@@ -121,6 +115,7 @@ public class EmployeeEndpoint {
     @PUT
     @Path("{id}/update")
     public Response updateEmployee(@PathParam("id") Long id, Employee employee) {
+        System.out.println(getTime() + " ==== Employee Endpoint 'updateEmployee' started");
         if (this.employeeService.updateEmployee(employee)) {
             return Response.ok().build();
         }
@@ -136,10 +131,11 @@ public class EmployeeEndpoint {
     @PUT
     @Produces(MediaType.TEXT_PLAIN)
     @Path("{id}/partner/{param}")
-    public Response addPartnerToEmployeeUsingIDs(
+    public Response addOrRemovePartnerToEmployee(
     		@PathParam("id") Long id, 
     		@PathParam("param") String param, 
     		@QueryParam("id_partner") long idPartner) {
+        System.out.println(getTime() + " ==== Employee Endpoint 'addOrRemovePartnerToEmployee' started");
     	if (param.equals("remove")) {
             if (this.employeeService.removePartnerFromEmployee(this.employeeService.findEmployeeInDatabase(id))) {
                 return Response.ok().build();
@@ -160,9 +156,16 @@ public class EmployeeEndpoint {
     @DELETE
     @Path("{id}/del")
     public Response removeEmployee(@PathParam("id") Long id) {
+        System.out.println(getTime() + " ==== Employee Endpoint 'removeEmployee' started");
         if (this.employeeService.deleteEmployeeFromDatabase(id)) {
             return Response.ok().build();
         }
         return Response.notModified().build();
+    }
+    
+    
+    private String getTime() {
+    	SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd '-' HH:mm:ss.SSS");
+    	return ft.format(new Date());
     }
 }

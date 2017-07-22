@@ -5,7 +5,7 @@ public interface IEmployee extends IEmployeeName {
 	
 	void setName(String name);
 
-	long getPartnerId();
+	IEmployeeName getPartner();
 	void setPartner(Employee employee);
 	Employee retrievePartner();
 }

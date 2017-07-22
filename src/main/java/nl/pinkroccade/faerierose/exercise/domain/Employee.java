@@ -40,11 +40,11 @@ public class Employee implements IEmployee{
      * Returns the id of the Partner to prevent a loop in the code
      * @return id of partner if partner is not null, otherwise -1;
      */
-    public long getPartnerId() {
+    public IEmployeeName getPartner() {
         if (this.partner == null) {
-            return 0;
+            return null;
         }
-        return this.partner.getId();
+        return new EmployeeModelName(this.partner);
     }
     public Employee retrievePartner() {
         if (this.partner == null) {
