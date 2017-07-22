@@ -56,7 +56,8 @@ function saveEmployeeByName() {
 	var newName = $("#strNewEmployee").val();
 	var url = "http://localhost:8081/api/employee/new?name=" + newName;
 	var data = '';
-	$.post(url,data,function(response, status){
+	$.post(url, data, function(response, status){
+		console.log(response);
 		if(status == "success") {
 			if (response > 0) {
 				getAllEmployees();
@@ -67,53 +68,34 @@ function saveEmployeeByName() {
 			}
 		}
 	},"text");
-//    var xhttp = new XMLHttpRequest();
-//    xhttp.onreadystatechange = function() {
-//        if (this.readyState == 4 && this.status == 200) {
-//        	if (this.responseText > 0) {
-//                getAllEmployees();
-//                $("#pEmployeeNewFeedback").text("");
-//                $("#strNewEmployee").val("");
-//        	} else {
-//                $("#pEmployeeNewFeedback").text("Warning: Unable to create new Employee. Name too short or already exists.");
-//        	}
-//        }
-//    };
-//    xhttp.open("POST", "http://localhost:8081/api/employee/new?name=" + newName, true);
-//    xhttp.setRequestHeader("Content-type", "application/json");
-//    xhttp.send();
 }
 
 function seeEmployee(id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 &&  this.status == 200) {
-            console.log(this.responseText);
-            employee = JSON.parse(this.responseText);
+	var url = "http://localhost:8081/api/employee/find/" + id;
+	$.get(url, function(employee, status) {
+		if(status == "success") {
+			console.log(employee);
             if (employee.partner != null) {
                 setSeeEmployee(employee.name, employee.partner.name, employee.id, false)
             } else {
                 setSeeEmployee(employee.name, "", employee.id, false)
                 getPartnerList(employee.id);
             }
-        }
-    };
-    xhttp.open("GET", "http://localhost:8081/api/employee/find/" + id);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
+		}
+		
+	});
 }
 
 function removeEmployee(id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 &&  this.status == 200) {
+	var url = "http://localhost:8081/api/employee/" + id + "/del";
+	$.ajax({
+		url: url,
+		type: 'DELETE',
+		success: function(response) {
             getAllEmployees();
             setSeeEmployee("", "", -1, true);
-        }
-    };
-    xhttp.open("DELETE", "http://localhost:8081/api/employee/" + id + "/del", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
+		}
+	});
 }
 
 function updateEmployee(id) {
