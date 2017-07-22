@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import nl.pinkroccade.faerierose.exercise.domain.Employee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployeeName;
-import nl.pinkroccade.faerierose.exercise.domain.IEmployeeView;
 import nl.pinkroccade.faerierose.exercise.persistence.EmployeeService;
 
 @Path("employee")

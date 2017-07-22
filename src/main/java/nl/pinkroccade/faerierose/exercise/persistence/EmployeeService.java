@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nl.pinkroccade.faerierose.exercise.domain.Employee;
+import nl.pinkroccade.faerierose.exercise.domain.EmployeeModelName;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployeeName;
-import nl.pinkroccade.faerierose.exercise.domain.IEmployeeView;
 
 
 @Service
@@ -207,14 +207,14 @@ public class EmployeeService {
      * @param employee
      * @return
      */
-    public List<IEmployeeName> findPossiblePartners(IEmployeeView employee) {
+    public List<IEmployeeName> findPossiblePartners(IEmployee employee) {
         System.out.println("==== Employee Service 'findPossiblePartners' started");
         List<IEmployeeName> partnerList = new ArrayList<>();
         if (employee != null && this.findEmployeeInDatabase(employee.getId()) != null && employee.getPartnerId() == 0) {
             Iterable<Employee> employees = this.getAllEmployeesInDatabase();
-            for (IEmployeeView employeeDB : employees) {
+            for (IEmployee employeeDB : employees) {
                 if (employeeDB.getPartnerId() == 0 && !employeeDB.equals(employee)) {
-                    partnerList.add(employeeDB);
+                    partnerList.add(new EmployeeModelName(employeeDB));
                 }
             }
         }
