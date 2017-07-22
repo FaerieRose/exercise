@@ -87,9 +87,8 @@ function seeEmployee(id) {
 }
 
 function removeEmployee(id) {
-	var url = "http://localhost:8081/api/employee/" + id + "/del";
 	$.ajax({
-		url: url,
+		url: "http://localhost:8081/api/employee/" + id + "/del",
 		type: 'DELETE',
 		success: function(response) {
             getAllEmployees();
@@ -107,35 +106,36 @@ function updateEmployee(id) {
 
 function addPartner(id) {
     var idPartner = document.getElementById("selectPartner").value;
-    var data = '{}';
+    var data = '';
     var param = "/partner/add?id_partner=" + idPartner;
     changeEmployee(id, param, data);
 }
 
 function removePartner(id) {
-    var data = '{}';
+    var data = '';
     var param = "/partner/remove";
     changeEmployee(id, param, data);
 }
 
 function changeEmployee(id, param, data) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-        	if (this.status == 200) {
+	$.ajax({
+		url: "http://localhost:8081/api/employee/" + id + param,
+		type: 'PUT',
+		contentType: "application/json",
+		data: data,
+		success: function(response, status) {
+			console.log(status);
+        	if (status == "success") {
                 getAllEmployees();
                 seeEmployee(id);
-                document.getElementById("pEmployeeInformationFeedback").textContent = "";
-        	} else if (this.status == 304) {
-        		document.getElementById("pEmployeeInformationFeedback").textContent = "Warning: Unable to update Employee"
+                $("#pEmployeeInformationFeedback").text("");
+        	} else if (status == "notmodified") {
+        		$("#pEmployeeInformationFeedback").text("Warning: Unable to update Employee");
         	} else {
-        		document.getElementById("pEmployeeInformationFeedback").textContent = "Error: Unable to update Employee"
+        		$("#pEmployeeInformationFeedback").text("Error: Unable to update Employee");
         	}
-        }
-    };
-    xhttp.open("PUT", "http://localhost:8081/api/employee/" + id + param, true);
-    xhttp.setRequestHeader("Content-type", "application/json");4
-    xhttp.send(data);
+		} 
+	});
 }
 
 function getPartnerList(id) {
