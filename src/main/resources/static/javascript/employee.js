@@ -86,38 +86,8 @@ function seeEmployee(id) {
 	});
 }
 
-function removeEmployee(id) {
-	$.ajax({
-		url: "http://localhost:8081/api/employee/" + id + "/del",
-		type: 'DELETE',
-		success: function(response) {
-            getAllEmployees();
-            setSeeEmployee("", "", -1, true);
-		}
-	});
-}
-
-function updateEmployee(id) {
-	var name = document.getElementById("strEmployeeName").value;
-	var data = '{"id":' + id + ',"name":"' + name + '"}';
-	var param = "/update"
-    changeEmployee(id, param, data);
-}
-
-function addPartner(id) {
-    var idPartner = document.getElementById("selectPartner").value;
-    var data = '';
-    var param = "/partner/add?id_partner=" + idPartner;
-    changeEmployee(id, param, data);
-}
-
-function removePartner(id) {
-    var data = '';
-    var param = "/partner/remove";
-    changeEmployee(id, param, data);
-}
-
 function changeEmployee(id, param, data) {
+	console.log(data);
 	$.ajax({
 		url: "http://localhost:8081/api/employee/" + id + param,
 		type: 'PUT',
@@ -167,24 +137,41 @@ function getPartnerList(id) {
 
 function setSeeEmployee(name, partner, id, isDisabled) {
     getPartnerList(-1);
-    document.getElementById("strEmployeeName").value = name;
-    document.getElementById("strEmployeePartner").value = partner;
-    document.getElementById("btnEmployeeUpdate").disabled = isDisabled;
-    document.getElementById("btnEmployeeRemove").disabled = isDisabled;
-    document.getElementById("btnPartnerRemove").disabled = isDisabled;
+    $("#strEmployeeName").val(name);
+    $("#strEmployeePartner").val(partner);
+    $(".btnEmployeeInfo").prop("disabled", isDisabled);
     if (partner == "") {
-        document.getElementById("btnPartnerRemove").disabled = true;
+        $("#btnPartnerRemove").prop("disabled", true);
     }
-    document.getElementById("pEmployeeInformationFeedback").textContent = "";
-    if (id == -1) {
-        document.getElementById("btnEmployeeUpdate").removeAttribute("onclick");
-        document.getElementById("btnEmployeeRemove").removeAttribute("onclick");
-        document.getElementById("btnPartnerRemove").removeAttribute("onclick");
-        document.getElementById("btnPartnerAdd").removeAttribute("onclick");
-    } else {
-        document.getElementById("btnEmployeeUpdate").setAttribute("onclick","updateEmployee(" + id + ")");
-        document.getElementById("btnEmployeeRemove").setAttribute("onclick","removeEmployee(" + id + ")");
-        document.getElementById("btnPartnerRemove").setAttribute("onclick","removePartner(" + id + ")");
-        document.getElementById("btnPartnerAdd").setAttribute("onclick","addPartner(" + id + ")");
+    $("#pEmployeeInformationFeedback").text("");
+    $(".btnEmployeeInfo").off();
+    if (id != -1) {
+        $("#btnEmployeeUpdate").click(function() {
+        	var name = $("#strEmployeeName").val();
+        	var data = '{"id":' + id + ',"name":"' + name + '"}';
+        	var param = "/update"
+            changeEmployee(id, param, data);
+        });
+        $("#btnEmployeeRemove").click(function() {
+        	$.ajax({
+        		url: "http://localhost:8081/api/employee/" + id + "/del",
+        		type: 'DELETE',
+        		success: function(response, status) {
+                	if (status == "success") {
+                        getAllEmployees();
+	                    setSeeEmployee("", "", -1, true);
+                	}
+        		}
+        	});
+        });
+        $("#btnPartnerRemove").click(function() {
+            var param = "/partner/remove";
+            changeEmployee(id, param, '');
+        });
+        $("#btnPartnerAdd").click(function() {
+            var idPartner = $("#selectPartner").val();
+            var param = "/partner/add?id_partner=" + idPartner;
+            changeEmployee(id, param, '');
+        });
     }
 }
