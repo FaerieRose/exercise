@@ -53,22 +53,35 @@ function getAllEmployees() {
 }
 
 function saveEmployeeByName() {
-	var newName = document.getElementById("strNewEmployee").value;
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-        	if (this.responseText > 0) {
-                getAllEmployees();
-                document.getElementById("pEmployeeNewFeedback").textContent = "";
-                document.getElementById("strNewEmployee").value = "";
-        	} else {
-                document.getElementById("pEmployeeNewFeedback").textContent = "Warning: Unable to create new Employee. Name too short or already exists.";
-        	}
-        }
-    };
-    xhttp.open("POST", "http://localhost:8081/api/employee/new?name=" + newName, true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
+	var newName = $("#strNewEmployee").val();
+	var url = "http://localhost:8081/api/employee/new?name=" + newName;
+	var data = '';
+	$.post(url,data,function(response, status){
+		if(status == "success") {
+			if (response > 0) {
+				getAllEmployees();
+				$("#pEmployeeNewFeedback").text("");
+				$("#strNewEmployee").val("");
+			} else {
+				$("#pEmployeeNewFeedback").text("Warning: Unable to create new Employee. Name too short or already exists.");
+			}
+		}
+	},"text");
+//    var xhttp = new XMLHttpRequest();
+//    xhttp.onreadystatechange = function() {
+//        if (this.readyState == 4 && this.status == 200) {
+//        	if (this.responseText > 0) {
+//                getAllEmployees();
+//                $("#pEmployeeNewFeedback").text("");
+//                $("#strNewEmployee").val("");
+//        	} else {
+//                $("#pEmployeeNewFeedback").text("Warning: Unable to create new Employee. Name too short or already exists.");
+//        	}
+//        }
+//    };
+//    xhttp.open("POST", "http://localhost:8081/api/employee/new?name=" + newName, true);
+//    xhttp.setRequestHeader("Content-type", "application/json");
+//    xhttp.send();
 }
 
 function seeEmployee(id) {
