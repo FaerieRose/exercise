@@ -9,38 +9,31 @@ function getAllEmployees() {
           if (this.status == 200) {
               console.log(this.responseText);
               var employeeList = JSON.parse(this.responseText);
-              var employeeTable = document.getElementById("tblEmployees");
-              employeeTable.innerHTML = "";
-        	  var row = document.createElement("tr");
-        	  var col1 = document.createElement("th");
-        	  var col2 = document.createElement("th");
-        	  var col3 = document.createElement("th");
-        	  col1.textContent = "ID";
-        	  col2.textContent = "Name";
-        	  col3.textContent = "Partner";
-        	  col1.setAttribute("id", "hdrID")
-        	  col2.setAttribute("id", "hdrName")
-        	  col3.setAttribute("id", "hdrPartner")
-        	  row.appendChild(col1);
-        	  row.appendChild(col2);
-        	  row.appendChild(col3);
-        	  employeeTable.appendChild(row);
+              var employeeTable = $("#tblEmployees");
+        	  var row = $("<tr></tr>");
+        	  var col = [];
+        	  for (j=0;j<3;j++) col.push($("<th></th>"));
+        	  col[0].text("ID");
+        	  col[1].text("Name");
+        	  col[2].text("Partner");
+        	  col[0].prop("id", "hdrID")
+        	  col[1].prop("id", "hdrName")
+        	  col[2].prop("id", "hdrPartner")
+        	  row.append(col[0], col[1], col[2]);
+              employeeTable.empty();
+        	  employeeTable.append(row);
               for (var i=0 ; i< employeeList.length ; i++) {
-            	  row = document.createElement("tr");
-            	  col1 = document.createElement("td");
-            	  col2 = document.createElement("td");
-            	  col3 = document.createElement("td");
-            	  col1.textContent = employeeList[i].id;
-            	  col2.textContent = employeeList[i].name;
+            	  row = $("<tr></tr>");
+            	  for (j=0;j<3;j++) col[j] = $("<td></td>");
+            	  col[0].text(employeeList[i].id);
+            	  col[1].text(employeeList[i].name);
             	  if (employeeList[i].partner != null) {
-            		  col3.textContent = employeeList[i].partner.name;  
+            		  col[2].text(employeeList[i].partner.name);  
             	  }
-            	  row.setAttribute("class","rowEmployee")
-            	  row.setAttribute("onclick","seeEmployee('" + employeeList[i].id + "')")
-            	  row.appendChild(col1);
-            	  row.appendChild(col2);
-            	  row.appendChild(col3);
-            	  employeeTable.appendChild(row);
+            	  row.prop("class","rowEmployee");
+            	  row.click(employeeList[i].id, seeEmployee);
+            	  row.append(col[0], col[1], col[2]);
+            	  employeeTable.append(row);
               }
           } else if (this.status == 204) {
               console.log("No data available");
@@ -70,8 +63,8 @@ function saveEmployeeByName() {
 	},"text");
 }
 
-function seeEmployee(id) {
-	var url = "http://localhost:8081/api/employee/find/" + id;
+function seeEmployee(event) {
+	var url = "http://localhost:8081/api/employee/find/" + event.data;
 	$.get(url, function(employee, status) {
 		if(status == "success") {
 			console.log(employee);
@@ -82,7 +75,6 @@ function seeEmployee(id) {
                 getPartnerList(employee.id);
             }
 		}
-		
 	});
 }
 
@@ -109,29 +101,24 @@ function changeEmployee(id, param, data) {
 }
 
 function getPartnerList(id) {
-    var sel = document.getElementById("selectPartner");
-    sel.innerHTML = "";
-    sel.disabled = true;
-    document.getElementById("btnPartnerAdd").disabled = true;
+    var sel = $("#selectPartner");
+    sel.empty();
+    sel.prop("disabled", true);
+    $("#btnPartnerAdd").prop("disabled", true);
     if (id > 0) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 &&  this.status == 200) {
-                console.log(this.responseText);
-                partners = JSON.parse(this.responseText);
-                sel.disabled = false;
-                document.getElementById("btnPartnerAdd").disabled = false;
-                for (var i=0 ; i< partners.length ; i++) {
-                	var opt = document.createElement("option");
-                	opt.value = partners[i].id;
-                	opt.textContent = partners[i].name;
-                	sel.appendChild(opt);
+    	var url = "http://localhost:8081/api/employee/" + id + "/possible_partners";
+    	$.get(url, function(possiblePartners, status) {
+    		if(status == "success") {
+    			console.log(possiblePartners);
+    		    sel.prop("disabled", false);
+    		    $("#btnPartnerAdd").prop("disabled", false);
+                for (var i=0 ; i< possiblePartners.length ; i++) {
+                	var opt = $("<option></option>").val(possiblePartners[i].id);
+                	opt.text(possiblePartners[i].name);
+                	sel.append(opt);
                 }
-            }
-        };
-        xhttp.open("GET", "http://localhost:8081/api/employee/" + id + "/possible_partners");
-        xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.send();
+    		}
+    	});
     }
 }
 
