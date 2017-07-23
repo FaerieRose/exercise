@@ -7,10 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import nl.pinkroccade.faerierose.exercise.domain.model.EmployeeModelBasic;
-
 @Entity
-public class Employee {
+public class Employee implements IEmployee{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -42,18 +40,17 @@ public class Employee {
      * Returns the id of the Partner to prevent a loop in the code
      * @return id of partner if partner is not null, otherwise -1;
      */
-    public EmployeeModelBasic getPartner() {
+    public IEmployeeName getPartner() {
         if (this.partner == null) {
             return null;
         }
-        return new EmployeeModelBasic(this.partner);
+        return new EmployeeModelName(this.partner);
     }
-    /**
-     * This returns the Employee object
-     * @return the partner
-     */
     public Employee retrievePartner() {
-        return partner;
+        if (this.partner == null) {
+            return null;
+        }
+        return this.partner;
     }
     public void setPartner(Employee partner) {
         this.partner = partner;
