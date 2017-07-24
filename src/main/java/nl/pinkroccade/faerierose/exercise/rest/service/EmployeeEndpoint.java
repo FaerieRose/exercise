@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 import nl.pinkroccade.faerierose.exercise.domain.Employee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployeeName;
+import nl.pinkroccade.faerierose.exercise.domain.Resource;
+import nl.pinkroccade.faerierose.exercise.domain.RestContainer;
 import nl.pinkroccade.faerierose.exercise.persistence.EmployeeService;
 
 @Path("employee")
@@ -82,6 +84,10 @@ public class EmployeeEndpoint {
         System.out.println(getTime() + " ==== Employee Endpoint 'getPossiblePartners' started");
         List<IEmployeeName> result = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
         return Response.ok(result).build();
+//        List<IEmployeeName> partners = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
+//        RestContainer result = new RestContainer(partners);
+//        result.addResource(new Resource(Resource.PUT, Resource.startUrl + "/employee/" + id + "/partner/add?id_partner=", "Add partner"));
+//        return Response.ok(result).build();
     }
 
     /**
