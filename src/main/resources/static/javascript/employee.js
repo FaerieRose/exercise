@@ -3,46 +3,38 @@ window.onload = function() {
 }
 
 function getAllEmployees() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-              console.log(this.responseText);
-              var employeeList = JSON.parse(this.responseText);
-              var employeeTable = $("#tblEmployees");
-        	  var row = $("<tr></tr>");
-        	  var col = [];
-        	  for (j=0;j<3;j++) col.push($("<th></th>"));
-        	  col[0].text("ID");
-        	  col[1].text("Name");
-        	  col[2].text("Partner");
-        	  col[0].prop("id", "hdrID")
-        	  col[1].prop("id", "hdrName")
-        	  col[2].prop("id", "hdrPartner")
-        	  row.append(col[0], col[1], col[2]);
-              employeeTable.empty();
-        	  employeeTable.append(row);
-              for (var i=0 ; i< employeeList.length ; i++) {
-            	  row = $("<tr></tr>");
-            	  for (j=0;j<3;j++) col[j] = $("<td></td>");
-            	  col[0].text(employeeList[i].id);
-            	  col[1].text(employeeList[i].name);
-            	  if (employeeList[i].partner != null) {
-            		  col[2].text(employeeList[i].partner.name);  
-            	  }
-            	  row.prop("class","rowEmployee");
-            	  row.click(employeeList[i].id, seeEmployee);
-            	  row.append(col[0], col[1], col[2]);
-            	  employeeTable.append(row);
-              }
-          } else if (this.status == 204) {
-              console.log("No data available");
-          }
-        }
-    };
-    xhttp.open("GET", "http://localhost:8081/api/employee/findall");
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
+	var url = "http://localhost:8081/api/employee/findall";
+	$.get(url, function(employeeList, status) {
+		if(status == "success") {
+            console.log(employeeList);
+            var employeeTable = $("#tblEmployees");
+      	    var row = $("<tr></tr>");
+      	    var col = [];
+      	    for (j=0;j<3;j++) col.push($("<th></th>"));
+      	    col[0].text("ID");
+      	    col[1].text("Name");
+      	    col[2].text("Partner");
+      	    col[0].prop("id", "hdrID");
+      	    col[1].prop("id", "hdrName");
+      	    col[2].prop("id", "hdrPartner");
+      	    row.append(col[0], col[1], col[2]);
+            employeeTable.empty();
+      	    employeeTable.append(row);
+            for (var i=0 ; i< employeeList.length ; i++) {
+          	    row = $("<tr></tr>");
+          	    for (j=0;j<3;j++) col[j] = $("<td></td>");
+          	    col[0].text(employeeList[i].id);
+          	    col[1].text(employeeList[i].name);
+          	    if (employeeList[i].partner != null) {
+          		    col[2].text(employeeList[i].partner.name);  
+          	    }
+          	    row.prop("class","rowEmployee");
+          	    row.click(employeeList[i].id, seeEmployee);
+          	    row.append(col[0], col[1], col[2]);
+          	    employeeTable.append(row);
+            }
+		}
+	});
 }
 
 function saveEmployeeByName() {
