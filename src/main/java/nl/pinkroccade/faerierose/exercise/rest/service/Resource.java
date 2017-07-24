@@ -1,19 +1,21 @@
-package nl.pinkroccade.faerierose.exercise.domain;
+package nl.pinkroccade.faerierose.exercise.rest.service;
 
 public class Resource {
 	private String link;         // Must start with http
 	private String type;         // GET, POST, PUT, DELETE
+	private String command;
 	private String description;  // Max 64 characters
 	
 	public static final String GET    = "GET";
 	public static final String PUT    = "PUT";
 	public static final String POST   = "POST";
 	public static final String DELETE = "DELETE";
-	public static String startUrl = "http://localhost:8081/api";
+	public static String startUrl = "http://localhost:8081/api/employee";
 	
-	public Resource(String type, String link, String description) {
+	public Resource(String type, String link, String command, String description) {
 		this.setLink(link);
 		this.setType(type);
+		this.setCommand(command);
 		this.setDescription(description);
 	}
 	
@@ -42,6 +44,14 @@ public class Resource {
 			this.description = description;
 		}
 	}
+
+	public String getCommand() {
+		return command;
+	}
+	public void setCommand(String command) {
+		this.command = command;
+	}
+	
 	
 	
 }

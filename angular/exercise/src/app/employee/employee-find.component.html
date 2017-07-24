@@ -1,0 +1,19 @@
+  <h2>Employee Information</h2>
+  <div *ngIf="employee" class="divBody">
+    <label>Name</label>
+    <input type="text" id="strEmployeeName" placeholder="Name of the new Employee" value="{{ employee.name }}">
+    <input type="button" class="btnEmployeeInfo" id="btnEmployeeUpdate" value="Update" disabled>
+    <input type="button" class="btnEmployeeInfo" id="btnEmployeeRemove" value="Remove Employee" disabled><br>
+    <label>Partner</label>
+    <div *ngIf="employee.partner" class="divInlineBlock">
+      <input type="text" id="strEmployeePartner" placeholder="Name of the new Partner" value="{{ employee.partner.name }}">
+      <input type="button" class="btnEmployeeInfo" id="btnPartnerRemove" value="Remove Partner" disabled><br>
+    </div>
+    <div *ngIf="!employee.partner" class="divInlineBlock">
+      <select id="selectPartner" *ngIf="possiblePartners">
+        <option *ngFor='let partner of possiblePartners' value='{{ partner.id }}'>{{ partner.name }}</option>
+      </select>
+      <input type="button" class="btnEmployeeInfo" id="btnPartnerAdd" value='Add Partner' disabled><br>
+      <p class="feedback" id="pEmployeeInformationFeedback"></p>
+    </div>
+  </div>

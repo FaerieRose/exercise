@@ -1,0 +1,37 @@
+#divHome {
+  background-color: #E2017B;
+  color: white;
+  text-align: center;
+  padding: 5px 2em 5px 2em;
+}
+
+#divMain {
+  margin: 50px 20% 0px 20%;
+  text-align: center;
+}
+
+.divInlineBlock {
+  display: inline-block;
+  text-align: left;
+}
+
+.divBody {
+  text-align: left;
+}
+/* ----------------------------------------------------------------------------------- */
+/* Layout input buttons                                                                */
+label.button-large {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  border-radius: 0.1em 0.5em 0.1em 0.5em;
+  background-color: #fff;
+  color: #E2017B;
+  margin-top: 0.5em;
+  padding: 5px 2em 5px 2em;
+  width:40%;
+  height: auto;
+  font-weight: bold;
+  font-size: 2em;
+}

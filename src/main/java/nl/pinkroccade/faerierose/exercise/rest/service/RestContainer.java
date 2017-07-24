@@ -1,4 +1,4 @@
-package nl.pinkroccade.faerierose.exercise.domain;
+package nl.pinkroccade.faerierose.exercise.rest.service;
 
 import java.util.ArrayList;
 import java.util.List;

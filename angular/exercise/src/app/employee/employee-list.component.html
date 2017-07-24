@@ -1,0 +1,13 @@
+  <h2>List of Employees in the database</h2>
+  <table id="tblEmployees">
+    <tr>
+      <th id="hdrID">ID</th>
+      <th id="hdrName">Name</th>
+      <th id="hdrPartner">Partner</th>
+    </tr>
+    <tr *ngFor="let employee of employees" (click)="updateEmployee(employee.id)">
+      <td>{{ employee.id }}</td>
+      <td>{{ employee.name }}</td>
+      <td><span *ngIf="employee.partner">{{ employee.partner.name }}</span></td>
+    </tr>
+  </table>

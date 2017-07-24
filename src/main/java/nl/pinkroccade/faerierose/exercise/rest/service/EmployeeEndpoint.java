@@ -16,15 +16,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.pinkroccade.faerierose.exercise.domain.Employee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployee;
 import nl.pinkroccade.faerierose.exercise.domain.IEmployeeName;
-import nl.pinkroccade.faerierose.exercise.domain.Resource;
-import nl.pinkroccade.faerierose.exercise.domain.RestContainer;
 import nl.pinkroccade.faerierose.exercise.persistence.EmployeeService;
 
 @Path("employee")
@@ -33,6 +30,22 @@ public class EmployeeEndpoint {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInitialResources() {
+        System.out.println(getTime() + " ==== Employee Endpoint 'getInitialResources' started");
+        RestContainer result = new RestContainer(null);
+        List<Employee> allEmployees = this.employeeService.getAllEmployeesInDatabase();
+        if (allEmployees != null && !allEmployees.isEmpty()) {
+            result.addResource(new Resource(Resource.GET, Resource.startUrl + "/findall", "getAllEmployees", "Get all employees in database"));
+            result.addResource(new Resource(Resource.GET, Resource.startUrl + "/find?id=", "getOneEmployeeID", "Get employee based on id"));
+            result.addResource(new Resource(Resource.GET, Resource.startUrl + "/find?name=", "getOneEmployeeName", "Get employee based on name"));
+        }
+        result.addResource(new Resource(Resource.POST, Resource.startUrl + "/new?name=", "postNewEmployeeName", "Create new employee using only name"));
+        result.addResource(new Resource(Resource.POST, Resource.startUrl + "/new", "postNewEmployee", "Create new employee sending employee object in JSON format"));
+        return Response.ok(result).build();
+    }
     
     /**
      * GET a list of all the Employees in the database
@@ -43,8 +56,10 @@ public class EmployeeEndpoint {
     @Path("findall")
     public Response getCompleteListEmployees() {
         System.out.println(getTime() + " ==== Employee Endpoint 'getCompleteListEmployees' started");
-        Iterable<Employee> result = this.employeeService.getAllEmployeesInDatabase();
-        if (result != null) {
+        RestContainer result = new RestContainer(null);
+        Iterable<Employee> employees = this.employeeService.getAllEmployeesInDatabase();
+        if (employees != null) {
+        	result.setLoad(employees);
             return Response.ok(result).build();
         }
         return Response.noContent().build();
@@ -57,17 +72,23 @@ public class EmployeeEndpoint {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("find/{search_criteria}")
-    public Response findEmployee(@PathParam("search_criteria") String param) {
+    @Path("find")
+    public Response findEmployee(@QueryParam("id") long id, @QueryParam("name") String name) {
         System.out.println(getTime() + " ==== Employee Endpoint 'findEmployee' started");
-    	IEmployee result;
-    	if (StringUtils.isNumber(param)) {
-            result = this.employeeService.findEmployeeInDatabase(Long.parseLong(param));
-    	} else {
-            result = this.employeeService.findEmployeeInDatabase(param);
+        RestContainer result = new RestContainer(null);
+    	IEmployee employee = null;
+    	if (name != null) {
+    		employee = this.employeeService.findEmployeeInDatabase(name);
+    	} else if (id != 0) {
+    		employee = this.employeeService.findEmployeeInDatabase(id);
     	}
-        if (result != null && result instanceof Employee) {
-            return Response.ok((Employee) result).build();
+        if (employee != null && employee instanceof Employee) {
+    		result.setLoad(employee);
+            result.addResource(new Resource(Resource.PUT, Resource.startUrl + "/" + employee.getId() + "/update", "updateEmployee", "Change the name of the Employee"));
+            result.addResource(new Resource(Resource.GET, Resource.startUrl + "/" + employee.getId() + "/possible_partners", "possiblePartnersEmployee", "Change the name of the Employee"));
+            result.addResource(new Resource(Resource.PUT, Resource.startUrl + "/" + employee.getId() + "/partner/remove", "removePartnerFromEmployee", "Change the name of the Employee"));
+            result.addResource(new Resource(Resource.PUT, Resource.startUrl + "/" + employee.getId() + "/partner/add?id_partner=", "addPartnerToEmployee", "Change the name of the Employee"));
+            return Response.ok(result).build();
         }
         return Response.noContent().build();
     }
@@ -82,12 +103,10 @@ public class EmployeeEndpoint {
     @Path("{id}/possible_partners")
     public Response getPossiblePartners(@PathParam("id") Long id) {
         System.out.println(getTime() + " ==== Employee Endpoint 'getPossiblePartners' started");
-        List<IEmployeeName> result = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
+        List<IEmployeeName> partners = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
+        RestContainer result = new RestContainer(partners);
+        result.addResource(new Resource(Resource.PUT, Resource.startUrl + "/" + id + "/partner/add?id_partner=", "getEmployeePossiblePartners", "Add partner"));
         return Response.ok(result).build();
-//        List<IEmployeeName> partners = this.employeeService.findPossiblePartners(this.employeeService.findEmployeeInDatabase(id));
-//        RestContainer result = new RestContainer(partners);
-//        result.addResource(new Resource(Resource.PUT, Resource.startUrl + "/employee/" + id + "/partner/add?id_partner=", "Add partner"));
-//        return Response.ok(result).build();
     }
 
     /**

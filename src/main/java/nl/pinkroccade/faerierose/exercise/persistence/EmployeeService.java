@@ -26,9 +26,10 @@ public class EmployeeService {
      * Retrieving all Employees in the database
      * @return a list with all Employees
      */
-    public Iterable<Employee> getAllEmployeesInDatabase() {
+    public List<Employee> getAllEmployeesInDatabase() {
         System.out.println(getTime() + " ==== Employee Service 'findAll' started");
-        Iterable<Employee> result = this.employeeRepository.findAll();
+//        Iterable<Employee> result = this.employeeRepository.findAll();
+        List<Employee> result = (List<Employee>) this.employeeRepository.findAll();
         return result;
     }
     
